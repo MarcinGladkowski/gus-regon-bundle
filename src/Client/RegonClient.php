@@ -37,8 +37,6 @@ final class RegonClient implements RegonClientInterface
     public function __construct(
         private readonly string $apiKey,
         private readonly string $environment = self::ENVIRONMENT_TEST,
-        private readonly RegonValidator $regonValidator = new RegonValidator(),
-        private readonly NipValidator $nipValidator = new NipValidator(),
         private readonly LoggerInterface $logger = new NullLogger()
     ) {
         $this->initializeGusApi();
@@ -55,7 +53,7 @@ final class RegonClient implements RegonClientInterface
     public function getByRegon(string $regon): SearchReport
     {
         $this->ensureLoggedIn();
-        return (new RegonSearchHandler($this->gusApi, $this->logger, $this->regonValidator))->searchSingle($regon);
+        return (new RegonSearchHandler($this->gusApi, $this->logger, new RegonValidator()))->searchSingle($regon);
     }
 
     /**
@@ -69,7 +67,7 @@ final class RegonClient implements RegonClientInterface
     public function getByNip(string $nip): SearchReport
     {
         $this->ensureLoggedIn();
-        return (new NipSearchHandler($this->gusApi, $this->logger, $this->nipValidator))->searchSingle($nip);
+        return (new NipSearchHandler($this->gusApi, $this->logger, new NipValidator()))->searchSingle($nip);
     }
 
     /**
