@@ -32,7 +32,7 @@ final class RegonClient implements RegonClientInterface
     ];
 
     private GusApi $gusApi;
-    private bool $isLoggedIn = false;
+    private GusSession $session;
 
     public function __construct(
         private readonly string $apiKey,
@@ -40,6 +40,7 @@ final class RegonClient implements RegonClientInterface
         private readonly LoggerInterface $logger = new NullLogger()
     ) {
         $this->initializeGusApi();
+        $this->session = new GusSession($this->gusApi, $this->logger);
     }
 
     /**
@@ -52,7 +53,7 @@ final class RegonClient implements RegonClientInterface
      */
     public function getByRegon(string $regon): SearchReport
     {
-        $this->ensureLoggedIn();
+        $this->session->ensureLoggedIn();
         return (new RegonSearchHandler($this->gusApi, $this->logger, new RegonValidator()))->searchSingle($regon);
     }
 
@@ -66,7 +67,7 @@ final class RegonClient implements RegonClientInterface
      */
     public function getByNip(string $nip): SearchReport
     {
-        $this->ensureLoggedIn();
+        $this->session->ensureLoggedIn();
         return (new NipSearchHandler($this->gusApi, $this->logger, new NipValidator()))->searchSingle($nip);
     }
 
@@ -80,39 +81,19 @@ final class RegonClient implements RegonClientInterface
      */
     public function getByKrs(string $krs): SearchReport
     {
-        $this->ensureLoggedIn();
+        $this->session->ensureLoggedIn();
 
         return (new KrsSearchHandler($this->gusApi, $this->logger))->searchSingle($krs);
     }
 
     public function login(): void
     {
-        try {
-            $this->gusApi->login();
-            $this->isLoggedIn = true;
-            $this->logger->info('Successfully logged in to GUS API');
-        } catch (InvalidUserKeyException $e) {
-            $this->logger->error('Failed to login - invalid API key', ['exception' => $e]);
-            throw new ApiAuthenticationException('Invalid API key', '', 0, $e);
-        } catch (\SoapFault $e) {
-            $this->logger->error('Failed to login - SOAP error', ['exception' => $e]);
-            throw new ApiConnectionException('Failed to connect to GUS API', '', 0, $e);
-        }
+        $this->session->login();
     }
 
     public function logout(): void
     {
-        if (!$this->isLoggedIn) {
-            return;
-        }
-
-        try {
-            $this->gusApi->logout();
-            $this->isLoggedIn = false;
-            $this->logger->info('Successfully logged out from GUS API');
-        } catch (\Exception $e) {
-            $this->logger->warning('Failed to logout gracefully', ['exception' => $e]);
-        }
+        $this->session->logout();
     }
 
     private function initializeGusApi(): void
@@ -127,12 +108,5 @@ final class RegonClient implements RegonClientInterface
             $this->apiKey,
             $env
         );
-    }
-
-    private function ensureLoggedIn(): void
-    {
-        if (!$this->isLoggedIn) {
-            $this->login();
-        }
     }
 }
