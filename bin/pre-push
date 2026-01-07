@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# pre-push script to run quality checks
+
+echo "Running pre-push quality checks..."
+
+echo "1. Running Code Style Checker..."
+composer cs:check
+if [ $? -ne 0 ]; then
+    echo "Code style check failed!"
+    exit 1
+fi
+
+echo "2. Running Static Analysis (PHPStan)..."
+composer stan
+if [ $? -ne 0 ]; then
+    echo "Static analysis failed!"
+    exit 1
+fi
+
+echo "3. Running Tests..."
+composer test
+if [ $? -ne 0 ]; then
+    echo "Tests failed!"
+    exit 1
+fi
+
+echo "All checks passed!"
+exit 0

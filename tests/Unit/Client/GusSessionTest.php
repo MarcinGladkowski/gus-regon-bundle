@@ -132,7 +132,7 @@ class GusSessionTest extends TestCase
     {
         $this->gusApiMock->expects($this->once())
             ->method('login');
-        
+
         $this->gusSession->ensureLoggedIn();
         $this->assertTrue($this->gusSession->isLoggedIn());
     }
