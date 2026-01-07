@@ -9,6 +9,10 @@ use MarcinGladkowski\GusBundle\Client\SearchHandler\NipSearchHandler;
 use MarcinGladkowski\GusBundle\Client\SearchHandler\RegonSearchHandler;
 use MarcinGladkowski\GusBundle\Exception\ApiAuthenticationException;
 use MarcinGladkowski\GusBundle\Exception\ApiConnectionException;
+use MarcinGladkowski\GusBundle\Exception\CompanyNotFoundException;
+use MarcinGladkowski\GusBundle\Exception\InvalidKrsException;
+use MarcinGladkowski\GusBundle\Exception\InvalidNipException;
+use MarcinGladkowski\GusBundle\Exception\InvalidRegonException;
 use MarcinGladkowski\GusBundle\Validator\NipValidator;
 use MarcinGladkowski\GusBundle\Validator\RegonValidator;
 use GusApi\Exception\InvalidUserKeyException;
@@ -42,8 +46,8 @@ final class RegonClient implements RegonClientInterface
 
     /**
      * @param string $regon
-     * @throws \App\GusBundle\Exception\InvalidRegonException
-     * @throws \App\GusBundle\Exception\CompanyNotFoundException
+     * @throws CompanyNotFoundException
+     * @throws InvalidRegonException
      * @throws ApiAuthenticationException
      * @throws ApiConnectionException
      * @return SearchReport
@@ -56,8 +60,8 @@ final class RegonClient implements RegonClientInterface
 
     /**
      * @param string $nip
-     * @throws \App\GusBundle\Exception\InvalidNipException
-     * @throws \App\GusBundle\Exception\CompanyNotFoundException
+     * @throws InvalidNipException
+     * @throws CompanyNotFoundException
      * @throws ApiAuthenticationException
      * @throws ApiConnectionException
      * @return SearchReport
@@ -70,8 +74,8 @@ final class RegonClient implements RegonClientInterface
 
     /**
      * @param string $krs
-     * @throws \App\GusBundle\Exception\InvalidKrsException
-     * @throws \App\GusBundle\Exception\CompanyNotFoundException
+     * @throws InvalidKrsException
+     * @throws CompanyNotFoundException
      * @throws ApiAuthenticationException
      * @throws ApiConnectionException
      * @return SearchReport
@@ -115,9 +119,15 @@ final class RegonClient implements RegonClientInterface
 
     private function initializeGusApi(): void
     {
+        $env = match ($this->environment) {
+            self::ENVIRONMENT_TEST => 'dev',
+            self::ENVIRONMENT_PROD => 'prod',
+            default => $this->environment,
+        };
+
         $this->gusApi = new GusApi(
             $this->apiKey,
-            $this->environment
+            $env
         );
     }
 
