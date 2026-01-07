@@ -26,6 +26,32 @@
 - Write self-documenting code with clear variable names
 - Add PHPDoc only when necessary to explain complex logic
 
+### Git Commit Conventions
+
+We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
+Structure your commit messages as follows:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+**Common usage:**
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation only changes
+- `style`: Changes that do not affect the meaning of the code (white-space, formatting, etc)
+- `refactor`: A code change that neither fixes a bug nor adds a feature
+- `perf`: A code change that improves performance
+- `test`: Adding missing tests or correcting existing tests
+- `chore`: Changes to the build process or auxiliary tools and libraries such as documentation generation
+
+**VS Code Extension:**
+This project includes a recommendation for the `vivaxy.vscode-conventional-commits` extension. When opening the project in VS Code, you should be prompted to install it. It helps you draft commit messages that follow this convention.
+
 ### Testing
 
 All new code must include tests:
