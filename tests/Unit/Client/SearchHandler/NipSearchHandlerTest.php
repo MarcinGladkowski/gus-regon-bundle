@@ -31,7 +31,7 @@ final class NipSearchHandlerTest extends TestCase
         $this->gusApi = $this->createMock(GusApi::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->nipValidator = new NipValidator();
-        
+
         $this->handler = new NipSearchHandler(
             $this->gusApi,
             $this->logger,
@@ -43,7 +43,7 @@ final class NipSearchHandlerTest extends TestCase
     {
         $nip = '5260250274';
         $searchReport = new SearchReport(new SearchResponseCompanyData());
-        
+
         $this->gusApi->expects($this->once())
             ->method('getByNip')
             ->with($nip)

@@ -25,9 +25,9 @@ abstract class AbstractSearchHandler
     }
 
     abstract protected function validate(string $identifier): bool;
-    
+
     abstract protected function getIdentifierType(): string;
-    
+
     abstract protected function performSearch(string $identifier): array;
 
     abstract protected function createValidationException(string $identifier): \Exception;
@@ -49,7 +49,7 @@ abstract class AbstractSearchHandler
             if (count($result) > 1) {
                 throw new RuntimeException('Multiple results found when single expected');
             }
-            
+
             return new SearchReport(new SearchResponseCompanyData());
 
         } catch (NotFoundException $e) {

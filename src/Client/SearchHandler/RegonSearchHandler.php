@@ -19,7 +19,7 @@ final class RegonSearchHandler extends AbstractSearchHandler
         parent::__construct($gusApi, $logger);
     }
 
-    protected function validate(string $identifier): bool 
+    protected function validate(string $identifier): bool
     {
         return $this->regonValidator->validate($identifier);
     }

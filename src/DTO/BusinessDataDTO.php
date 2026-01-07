@@ -58,7 +58,7 @@ final readonly class BusinessDataDTO
             'status' => $this->status,
             'registeredAddress' => $this->registeredAddress?->toArray(),
             'businessAddress' => $this->businessAddress?->toArray(),
-            'pkdCodes' => array_map(fn(PkdCodeDTO $pkd) => $pkd->toArray(), $this->pkdCodes),
+            'pkdCodes' => array_map(fn (PkdCodeDTO $pkd) => $pkd->toArray(), $this->pkdCodes),
             'companySize' => $this->companySize,
             'employeeCount' => $this->employeeCount,
             'registrationDate' => $this->registrationDate?->format('Y-m-d'),

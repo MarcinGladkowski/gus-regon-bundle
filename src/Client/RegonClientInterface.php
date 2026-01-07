@@ -7,7 +7,7 @@ namespace MarcinGladkowski\GusBundle\Client;
 use GusApi\SearchReport;
 
 interface RegonClientInterface
-{   
+{
     public function getByRegon(string $regon): SearchReport;
 
     public function getByNip(string $nip): SearchReport;

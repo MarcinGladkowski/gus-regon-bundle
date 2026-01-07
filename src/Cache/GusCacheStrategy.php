@@ -29,7 +29,7 @@ final class GusCacheStrategy
 
             if ($item->isHit()) {
                 $data = $item->get();
-                
+
                 if ($data instanceof SearchReport) {
                     $this->logger->debug('Cache hit', ['key' => $key]);
                     return $data;
@@ -49,18 +49,18 @@ final class GusCacheStrategy
         try {
             $cacheKey = $this->buildCacheKey($key);
             $item = $this->cache->getItem($cacheKey);
-            
+
             $item->set($data);
             $item->expiresAfter($this->ttl);
-            
+
             $result = $this->cache->save($item);
-            
+
             if ($result) {
                 $this->logger->debug('Cache set successful', ['key' => $key, 'ttl' => $this->ttl]);
             } else {
                 $this->logger->warning('Cache set failed', ['key' => $key]);
             }
-            
+
             return $result;
         } catch (\Exception $e) {
             $this->logger->error('Cache set failed', ['key' => $key, 'exception' => $e]);
@@ -73,13 +73,13 @@ final class GusCacheStrategy
         try {
             $cacheKey = $this->buildCacheKey($key);
             $result = $this->cache->deleteItem($cacheKey);
-            
+
             if ($result) {
                 $this->logger->debug('Cache delete successful', ['key' => $key]);
             } else {
                 $this->logger->warning('Cache delete failed', ['key' => $key]);
             }
-            
+
             return $result;
         } catch (\Exception $e) {
             $this->logger->error('Cache delete failed', ['key' => $key, 'exception' => $e]);
@@ -91,13 +91,13 @@ final class GusCacheStrategy
     {
         try {
             $result = $this->cache->clear();
-            
+
             if ($result) {
                 $this->logger->info('Cache cleared successfully');
             } else {
                 $this->logger->warning('Cache clear failed');
             }
-            
+
             return $result;
         } catch (\Exception $e) {
             $this->logger->error('Cache clear failed', ['exception' => $e]);

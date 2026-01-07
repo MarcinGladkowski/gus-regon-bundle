@@ -28,7 +28,7 @@ final class KrsSearchHandlerTest extends TestCase
     {
         $this->gusApi = $this->createMock(GusApi::class);
         $this->logger = $this->createMock(LoggerInterface::class);
-        
+
         $this->handler = new KrsSearchHandler(
             $this->gusApi,
             $this->logger
@@ -39,7 +39,7 @@ final class KrsSearchHandlerTest extends TestCase
     {
         $krs = '0000123456';
         $searchReport = new SearchReport(new SearchResponseCompanyData());
-        
+
         $this->gusApi->expects($this->once())
             ->method('getByKrs')
             ->with($krs)

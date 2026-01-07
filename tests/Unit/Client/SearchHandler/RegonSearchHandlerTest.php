@@ -31,7 +31,7 @@ final class RegonSearchHandlerTest extends TestCase
         $this->gusApi = $this->createMock(GusApi::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->regonValidator = new RegonValidator();
-        
+
         $this->handler = new RegonSearchHandler(
             $this->gusApi,
             $this->logger,
@@ -43,7 +43,7 @@ final class RegonSearchHandlerTest extends TestCase
     {
         $regon = '123456785';
         $searchReport = new SearchReport(new SearchResponseCompanyData());
-        
+
         $this->gusApi->expects($this->once())
             ->method('getByRegon')
             ->with($regon)
@@ -59,7 +59,7 @@ final class RegonSearchHandlerTest extends TestCase
     {
         $regon = '12345678512347';
         $searchReport = new SearchReport(new SearchResponseCompanyData());
-        
+
         $this->gusApi->expects($this->once())
             ->method('getByRegon')
             ->with($regon)
