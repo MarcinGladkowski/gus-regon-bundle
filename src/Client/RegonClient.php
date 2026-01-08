@@ -30,7 +30,7 @@ final class RegonClient implements RegonClientInterface
 
     public function __construct(
         private readonly string $apiKey,
-        private readonly string $environment = self::ENVIRONMENT_TEST,
+        private readonly string $environment,
         private readonly LoggerInterface $logger = new NullLogger()
     ) {
         $this->initializeGusApi();

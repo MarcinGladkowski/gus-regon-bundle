@@ -16,10 +16,7 @@ final class RegonClientTest extends TestCase
 
     protected function setUp(): void
     {
-        // Allow overriding via environment variable
-        $apiKey = $_ENV['GUS_API_KEY'] ?? self::TEST_API_KEY;
-
-        $this->client = new RegonClient($apiKey, 'test');
+        $this->client = new RegonClient(self::TEST_API_KEY, 'test');
     }
 
     public function testLoginFailureWithInvalidKey(): void
