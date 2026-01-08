@@ -37,7 +37,6 @@ abstract class AbstractSearchHandler
         }
 
         try {
-            /**  @var $result SearchReport[] */
             $result = $this($identifier);
 
             if (!empty($result) && count($result) === 1) {

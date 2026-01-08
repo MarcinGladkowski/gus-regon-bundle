@@ -26,11 +26,6 @@ final class RegonClient implements RegonClientInterface
     private const ENVIRONMENT_TEST = 'test';
     private const ENVIRONMENT_PROD = 'production';
 
-    private const ENDPOINTS = [
-        self::ENVIRONMENT_TEST => 'https://wyszukiwarkaregontest.stat.gov.pl/wsBIR/UslugaBIRzewnPubl.svc',
-        self::ENVIRONMENT_PROD => 'https://wyszukiwarkaregon.stat.gov.pl/wsBIR/UslugaBIRzewnPubl.svc',
-    ];
-
     private GusApi $gusApi;
     private GusSession $session;
 
