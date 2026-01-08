@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Tests\Unit\Client\SearchHandler;
+namespace GusBundle\Tests\Unit\Client\SearchHandler;
 
-use MarcinGladkowski\GusBundle\Client\SearchHandler\NipSearchHandler;
-use MarcinGladkowski\GusBundle\Exception\ApiAuthenticationException;
-use MarcinGladkowski\GusBundle\Exception\ApiConnectionException;
-use MarcinGladkowski\GusBundle\Exception\CompanyNotFoundException;
-use MarcinGladkowski\GusBundle\Exception\InvalidNipException;
-use MarcinGladkowski\GusBundle\Validator\NipValidator;
+use GusBundle\Client\SearchHandler\NipSearchHandler;
+use GusBundle\Exception\ApiAuthenticationException;
+use GusBundle\Exception\ApiConnectionException;
+use GusBundle\Exception\CompanyNotFoundException;
+use GusBundle\Exception\InvalidNipException;
+use GusBundle\Validator\NipValidator;
 use GusApi\Exception\InvalidUserKeyException;
 use GusApi\Exception\NotFoundException;
 use GusApi\GusApi;

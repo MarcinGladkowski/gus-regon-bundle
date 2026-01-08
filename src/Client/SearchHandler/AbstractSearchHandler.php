@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Client\SearchHandler;
+namespace GusBundle\Client\SearchHandler;
 
-use MarcinGladkowski\GusBundle\Exception\ApiAuthenticationException;
-use MarcinGladkowski\GusBundle\Exception\ApiConnectionException;
-use MarcinGladkowski\GusBundle\Exception\CompanyNotFoundException;
-use MarcinGladkowski\GusBundle\Exception\GusApiException;
+use GusBundle\Exception\ApiAuthenticationException;
+use GusBundle\Exception\ApiConnectionException;
+use GusBundle\Exception\CompanyNotFoundException;
+use GusBundle\Exception\GusApiException;
 use GusApi\Exception\InvalidUserKeyException;
 use GusApi\Exception\NotFoundException;
 use GusApi\GusApi;

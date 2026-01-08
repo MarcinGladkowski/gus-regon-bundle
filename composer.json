@@ -31,12 +31,12 @@
     },
     "autoload": {
         "psr-4": {
-            "MarcinGladkowski\\GusBundle\\": "src/"
+            "GusBundle\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "MarcinGladkowski\\GusBundle\\Tests\\": "tests/"
+            "GusBundle\\Tests\\": "tests/"
         }
     },
     "scripts": {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Client\SearchHandler;
+namespace GusBundle\Client\SearchHandler;
 
-use MarcinGladkowski\GusBundle\Exception\InvalidRegonException;
-use MarcinGladkowski\GusBundle\Validator\RegonValidator;
+use GusBundle\Exception\InvalidRegonException;
+use GusBundle\Validator\RegonValidator;
 use GusApi\GusApi;
 use Psr\Log\LoggerInterface;
 use GusApi\SearchReport;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Exception;
+namespace GusBundle\Exception;
 
 final class CompanyNotFoundException extends GusApiException
 {

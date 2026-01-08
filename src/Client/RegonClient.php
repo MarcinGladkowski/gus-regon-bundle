@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Client;
+namespace GusBundle\Client;
 
-use MarcinGladkowski\GusBundle\Client\SearchHandler\KrsSearchHandler;
-use MarcinGladkowski\GusBundle\Client\SearchHandler\NipSearchHandler;
-use MarcinGladkowski\GusBundle\Client\SearchHandler\RegonSearchHandler;
-use MarcinGladkowski\GusBundle\Exception\ApiAuthenticationException;
-use MarcinGladkowski\GusBundle\Exception\ApiConnectionException;
-use MarcinGladkowski\GusBundle\Exception\CompanyNotFoundException;
-use MarcinGladkowski\GusBundle\Exception\InvalidKrsException;
-use MarcinGladkowski\GusBundle\Exception\InvalidNipException;
-use MarcinGladkowski\GusBundle\Exception\InvalidRegonException;
-use MarcinGladkowski\GusBundle\Validator\NipValidator;
-use MarcinGladkowski\GusBundle\Validator\RegonValidator;
+use GusBundle\Client\SearchHandler\KrsSearchHandler;
+use GusBundle\Client\SearchHandler\NipSearchHandler;
+use GusBundle\Client\SearchHandler\RegonSearchHandler;
+use GusBundle\Exception\ApiAuthenticationException;
+use GusBundle\Exception\ApiConnectionException;
+use GusBundle\Exception\CompanyNotFoundException;
+use GusBundle\Exception\InvalidKrsException;
+use GusBundle\Exception\InvalidNipException;
+use GusBundle\Exception\InvalidRegonException;
+use GusBundle\Validator\NipValidator;
+use GusBundle\Validator\RegonValidator;
 use GusApi\GusApi;
 use GusApi\SearchReport;
 use Psr\Log\LoggerInterface;

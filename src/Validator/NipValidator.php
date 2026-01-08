@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Validator;
+namespace GusBundle\Validator;
 
 final class NipValidator
 {

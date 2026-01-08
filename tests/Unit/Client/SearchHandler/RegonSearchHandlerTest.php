@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Tests\Unit\Client\SearchHandler;
+namespace GusBundle\Tests\Unit\Client\SearchHandler;
 
-use MarcinGladkowski\GusBundle\Client\SearchHandler\RegonSearchHandler;
-use MarcinGladkowski\GusBundle\Exception\ApiAuthenticationException;
-use MarcinGladkowski\GusBundle\Exception\ApiConnectionException;
-use MarcinGladkowski\GusBundle\Exception\CompanyNotFoundException;
-use MarcinGladkowski\GusBundle\Exception\InvalidRegonException;
-use MarcinGladkowski\GusBundle\Validator\RegonValidator;
+use GusBundle\Client\SearchHandler\RegonSearchHandler;
+use GusBundle\Exception\ApiAuthenticationException;
+use GusBundle\Exception\ApiConnectionException;
+use GusBundle\Exception\CompanyNotFoundException;
+use GusBundle\Exception\InvalidRegonException;
+use GusBundle\Validator\RegonValidator;
 use GusApi\Exception\InvalidUserKeyException;
 use GusApi\Exception\NotFoundException;
 use GusApi\GusApi;

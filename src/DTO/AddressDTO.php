@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\DTO;
+namespace GusBundle\DTO;
 
 final readonly class AddressDTO
 {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Client\SearchHandler;
+namespace GusBundle\Client\SearchHandler;
 
-use MarcinGladkowski\GusBundle\Exception\InvalidNipException;
-use MarcinGladkowski\GusBundle\Validator\NipValidator;
+use GusBundle\Exception\InvalidNipException;
+use GusBundle\Validator\NipValidator;
 use GusApi\GusApi;
 use Psr\Log\LoggerInterface;
 use GusApi\SearchReport;

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Tests\Integration\Client;
+namespace GusBundle\Tests\Integration\Client;
 
-use MarcinGladkowski\GusBundle\Client\RegonClient;
-use MarcinGladkowski\GusBundle\Exception\ApiAuthenticationException;
+use GusBundle\Client\RegonClient;
+use GusBundle\Exception\ApiAuthenticationException;
 use PHPUnit\Framework\TestCase;
 
 final class RegonClientTest extends TestCase

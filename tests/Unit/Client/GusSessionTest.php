@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Tests\Unit\Client;
+namespace GusBundle\Tests\Unit\Client;
 
-use MarcinGladkowski\GusBundle\Client\GusSession;
-use MarcinGladkowski\GusBundle\Exception\ApiAuthenticationException;
-use MarcinGladkowski\GusBundle\Exception\ApiConnectionException;
+use GusBundle\Client\GusSession;
+use GusBundle\Exception\ApiAuthenticationException;
+use GusBundle\Exception\ApiConnectionException;
 use GusApi\Exception\InvalidUserKeyException;
 use GusApi\GusApi;
 use PHPUnit\Framework\MockObject\MockObject;

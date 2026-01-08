@@ -3,7 +3,7 @@ services:
         autowire: true
         autoconfigure: true
 
-    App\GusBundle\:
+    GusBundle\:
         resource: '../src/'
         exclude:
             - '../src/GusBundle.php'
@@ -11,14 +11,14 @@ services:
             - '../src/Exception/'
 
     # Client Configuration
-    App\GusBundle\Client\RegonClientInterface:
-        class: App\GusBundle\Client\RegonClient
+    GusBundle\Client\RegonClientInterface:
+        class: GusBundle\Client\RegonClient
         arguments:
             $apiKey: '%env(GUS_REGON_API_KEY)%'
             $environment: '%env(default:GUS_ENVIRONMENT:GUS_ENVIRONMENT)%'
 
     # Cache Configuration
-    App\GusBundle\Cache\GusCacheStrategy:
+    GusBundle\Cache\GusCacheStrategy:
         arguments:
             $cache: '@cache.app'
             $ttl: '%env(default:gus_cache_ttl:int:GUS_CACHE_TTL)%'

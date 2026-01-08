@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\DependencyInjection;
+namespace GusBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

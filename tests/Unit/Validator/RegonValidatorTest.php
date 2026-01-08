@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Tests\Unit\Validator;
+namespace GusBundle\Tests\Unit\Validator;
 
-use MarcinGladkowski\GusBundle\Validator\RegonValidator;
+use GusBundle\Validator\RegonValidator;
 use PHPUnit\Framework\TestCase;
 
 final class RegonValidatorTest extends TestCase

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Tests\Unit\DTO;
+namespace GusBundle\Tests\Unit\DTO;
 
-use MarcinGladkowski\GusBundle\DTO\AddressDTO;
-use MarcinGladkowski\GusBundle\DTO\BusinessDataDTO;
-use MarcinGladkowski\GusBundle\DTO\PkdCodeDTO;
+use GusBundle\DTO\AddressDTO;
+use GusBundle\DTO\BusinessDataDTO;
+use GusBundle\DTO\PkdCodeDTO;
 use PHPUnit\Framework\TestCase;
 
 final class BusinessDataDTOTest extends TestCase

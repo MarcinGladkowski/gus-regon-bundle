@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Tests\Unit\DTO;
+namespace GusBundle\Tests\Unit\DTO;
 
-use MarcinGladkowski\GusBundle\DTO\AddressDTO;
+use GusBundle\DTO\AddressDTO;
 use PHPUnit\Framework\TestCase;
 
 final class AddressDTOTest extends TestCase

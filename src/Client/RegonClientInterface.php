@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Client;
+namespace GusBundle\Client;
 
 use GusApi\SearchReport;
 

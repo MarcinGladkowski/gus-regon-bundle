@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Cache;
+namespace GusBundle\Cache;
 
-use MarcinGladkowski\GusBundle\DTO\BusinessDataDTO;
+use GusBundle\DTO\BusinessDataDTO;
 use GusApi\SearchReport;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;

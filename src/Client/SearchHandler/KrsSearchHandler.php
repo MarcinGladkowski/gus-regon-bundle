@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Client\SearchHandler;
+namespace GusBundle\Client\SearchHandler;
 
-use MarcinGladkowski\GusBundle\Exception\InvalidKrsException;
+use GusBundle\Exception\InvalidKrsException;
 use GusApi\GusApi;
 use Psr\Log\LoggerInterface;
 use GusApi\SearchReport;

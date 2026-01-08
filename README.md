@@ -30,7 +30,7 @@ Register the bundle in your `config/bundles.php`:
 ```php
 return [
     // ...
-    MarcinGladkowski\GusBundle\GusBundle::class => ['all' => true],
+    GusBundle\GusBundle::class => ['all' => true],
 ];
 ```
 
@@ -56,7 +56,7 @@ GUS_API_KEY=your_gus_api_key_here
 ### Basic Company Lookup
 
 ```php
-use MarcinGladkowski\GusBundle\Service\GusApiClient;
+use GusBundle\Service\GusApiClient;
 
 class YourController
 {
@@ -83,8 +83,8 @@ class YourController
 ### Validation
 
 ```php
-use MarcinGladkowski\GusBundle\Validator\NipValidator;
-use MarcinGladkowski\GusBundle\Validator\RegonValidator;
+use GusBundle\Validator\NipValidator;
+use GusBundle\Validator\RegonValidator;
 
 // Validate NIP
 if (NipValidator::isValid($nip)) {

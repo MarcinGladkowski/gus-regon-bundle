@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MarcinGladkowski\GusBundle\Client;
+namespace GusBundle\Client;
 
-use MarcinGladkowski\GusBundle\Exception\ApiAuthenticationException;
-use MarcinGladkowski\GusBundle\Exception\ApiConnectionException;
+use GusBundle\Exception\ApiAuthenticationException;
+use GusBundle\Exception\ApiConnectionException;
 use GusApi\Exception\InvalidUserKeyException;
 use GusApi\GusApi;
 use Psr\Log\LoggerInterface;
