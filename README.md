@@ -80,23 +80,6 @@ class YourController
 }
 ```
 
-### Validation
-
-```php
-use GusBundle\Validator\NipValidator;
-use GusBundle\Validator\RegonValidator;
-
-// Validate NIP
-if (NipValidator::isValid($nip)) {
-    // Valid NIP
-}
-
-// Validate REGON  
-if (RegonValidator::isValid($regon)) {
-    // Valid REGON
-}
-```
-
 ## Data Transfer Objects
 
 The bundle provides comprehensive DTOs for structured data:
