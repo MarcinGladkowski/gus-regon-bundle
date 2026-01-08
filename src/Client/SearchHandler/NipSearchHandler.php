@@ -8,6 +8,7 @@ use MarcinGladkowski\GusBundle\Exception\InvalidNipException;
 use MarcinGladkowski\GusBundle\Validator\NipValidator;
 use GusApi\GusApi;
 use Psr\Log\LoggerInterface;
+use GusApi\SearchReport;
 
 final class NipSearchHandler extends AbstractSearchHandler
 {
@@ -29,7 +30,10 @@ final class NipSearchHandler extends AbstractSearchHandler
         return 'NIP';
     }
 
-    protected function performSearch(string $identifier): array
+    /**
+     * @return SearchReport[]
+     */
+    public function __invoke(string $identifier): array
     {
         return $this->gusApi->getByNip($identifier);
     }

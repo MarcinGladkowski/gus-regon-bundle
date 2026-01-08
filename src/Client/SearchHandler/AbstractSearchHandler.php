@@ -28,8 +28,6 @@ abstract class AbstractSearchHandler
 
     abstract protected function getIdentifierType(): string;
 
-    abstract protected function performSearch(string $identifier): array;
-
     abstract protected function createValidationException(string $identifier): \Exception;
 
     public function searchSingle(string $identifier): SearchReport
@@ -40,7 +38,7 @@ abstract class AbstractSearchHandler
 
         try {
             /**  @var $result SearchReport[] */
-            $result = $this->performSearch($identifier);
+            $result = $this($identifier);
 
             if (!empty($result) && count($result) === 1) {
                 return $result[0];

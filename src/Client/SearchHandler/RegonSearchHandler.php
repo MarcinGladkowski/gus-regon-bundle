@@ -8,6 +8,7 @@ use MarcinGladkowski\GusBundle\Exception\InvalidRegonException;
 use MarcinGladkowski\GusBundle\Validator\RegonValidator;
 use GusApi\GusApi;
 use Psr\Log\LoggerInterface;
+use GusApi\SearchReport;
 
 final class RegonSearchHandler extends AbstractSearchHandler
 {
@@ -29,7 +30,10 @@ final class RegonSearchHandler extends AbstractSearchHandler
         return 'REGON';
     }
 
-    protected function performSearch(string $identifier): array
+    /**
+     * @return SearchReport[]
+     */
+    public function __invoke(string $identifier): array
     {
         return $this->gusApi->getByRegon($identifier);
     }
