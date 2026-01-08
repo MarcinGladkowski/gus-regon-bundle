@@ -40,7 +40,7 @@
         }
     },
     "scripts": {
-        "test": "phpunit",
+        "test": "phpunit --testdox",
         "stan": "phpstan analyse",
         "cs:fix": "php-cs-fixer fix",
         "cs:check": "php-cs-fixer fix --dry-run --diff",
@@ -50,7 +50,7 @@
             "@test"
         ],
         "hooks:setup": "cp bin/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push"
-    },
+    }, 
     "minimum-stability": "stable",
     "prefer-stable": true,
     "config": {
