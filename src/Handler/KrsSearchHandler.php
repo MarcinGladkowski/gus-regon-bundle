@@ -23,7 +23,7 @@ final class KrsSearchHandler extends AbstractSearchHandler
      * @return SearchReport[]
      */
     public function __invoke(string $identifier): array
-    {   
+    {
         return $this->gusApi->getByKrs($identifier);
     }
 
