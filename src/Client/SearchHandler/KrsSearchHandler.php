@@ -11,13 +11,6 @@ use GusApi\SearchReport;
 
 final class KrsSearchHandler extends AbstractSearchHandler
 {
-    public function __construct(
-        GusApi $gusApi,
-        LoggerInterface $logger
-    ) {
-        parent::__construct($gusApi, $logger);
-    }
-
     protected function validate(string $identifier): bool
     {
         return strlen($identifier) === 10 && ctype_digit($identifier);
