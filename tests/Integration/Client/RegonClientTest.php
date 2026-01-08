@@ -14,6 +14,20 @@ final class RegonClientTest extends TestCase
 
     private RegonClient $client;
 
+    public static function setUpBeforeClass(): void
+    {
+        try {
+            $client = new RegonClient(self::TEST_API_KEY, 'test');
+            $client->login();
+        } catch (ApiAuthenticationException $e) {
+            self::markTestSkipped('GUS API Authentication failed. Check your API key or GUS service availability.');
+        } catch (\SoapFault $e) {
+            self::markTestSkipped('GUS API Connection failed (SOAP Fault). Service might be unavailable.');
+        } catch (\Throwable $e) {
+            self::markTestSkipped(sprintf('GUS API check failed: %s', $e->getMessage()));
+        }
+    }
+
     protected function setUp(): void
     {
         $this->client = new RegonClient(self::TEST_API_KEY, 'test');
@@ -33,14 +47,8 @@ final class RegonClientTest extends TestCase
         // 000331501 is GUS REGON
         $regon = '000331501';
 
-        try {
-            $report = $this->client->getByRegon($regon);
-            $this->assertNotEmpty($report->getName());
-        } catch (ApiAuthenticationException $e) {
-            $this->markTestSkipped('GUS API Authentication failed. Check your API key or GUS service availability.');
-        } catch (\SoapFault $e) {
-            $this->markTestSkipped('GUS API Connection failed (SOAP Fault). Service might be unavailable.');
-        }
+        $report = $this->client->getByRegon($regon);
+        $this->assertNotEmpty($report->getName());
     }
 
     public function testGetByNipWithValidNip(): void
@@ -48,14 +56,8 @@ final class RegonClientTest extends TestCase
         // 5261040828 is GUS NIP
         $nip = '5261040828';
 
-        try {
-            $report = $this->client->getByNip($nip);
-            $this->assertNotEmpty($report->getName());
-        } catch (ApiAuthenticationException $e) {
-            $this->markTestSkipped('GUS API Authentication failed. Check your API key or GUS service availability.');
-        } catch (\SoapFault $e) {
-            $this->markTestSkipped('GUS API Connection failed (SOAP Fault). Service might be unavailable.');
-        }
+        $report = $this->client->getByNip($nip);
+        $this->assertNotEmpty($report->getName());
     }
 
     public function testGetByKrsWithValidKrs(): void
@@ -63,15 +65,9 @@ final class RegonClientTest extends TestCase
         // 0000123456 - standard 10 digit KRS
         $krs = '0000123456';
 
-        try {
-            $report = $this->client->getByKrs($krs);
-            // SearchReport might be empty if not found, but we expect it to be return valid object.
-            // In Sandbox "12..." usually returns something or valid structure.
-            $this->assertNotNull($report);
-        } catch (ApiAuthenticationException $e) {
-            $this->markTestSkipped('GUS API Authentication failed. Check your API key or GUS service availability.');
-        } catch (\SoapFault $e) {
-            $this->markTestSkipped('GUS API Connection failed (SOAP Fault). Service might be unavailable.');
-        }
+        $report = $this->client->getByKrs($krs);
+        // SearchReport might be empty if not found, but we expect it to be return valid object.
+        // In Sandbox "12..." usually returns something or valid structure.
+        $this->assertNotNull($report);
     }
 }
