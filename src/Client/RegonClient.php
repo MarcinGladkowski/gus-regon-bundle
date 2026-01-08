@@ -15,7 +15,6 @@ use MarcinGladkowski\GusBundle\Exception\InvalidNipException;
 use MarcinGladkowski\GusBundle\Exception\InvalidRegonException;
 use MarcinGladkowski\GusBundle\Validator\NipValidator;
 use MarcinGladkowski\GusBundle\Validator\RegonValidator;
-use GusApi\Exception\InvalidUserKeyException;
 use GusApi\GusApi;
 use GusApi\SearchReport;
 use Psr\Log\LoggerInterface;
@@ -96,7 +95,7 @@ final class RegonClient implements RegonClientInterface
         $env = match ($this->environment) {
             self::ENVIRONMENT_TEST => 'dev',
             self::ENVIRONMENT_PROD => 'prod',
-            default => $this->environment,
+            default => throw new \InvalidArgumentException('Invalid environment specified'),
         };
 
         $this->gusApi = new GusApi(
