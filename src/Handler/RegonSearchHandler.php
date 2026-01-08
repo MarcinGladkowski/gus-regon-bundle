@@ -2,32 +2,32 @@
 
 declare(strict_types=1);
 
-namespace GusBundle\Client\SearchHandler;
+namespace GusBundle\Handler;
 
-use GusBundle\Exception\InvalidNipException;
-use GusBundle\Validator\NipValidator;
+use GusBundle\Exception\InvalidRegonException;
+use GusBundle\Validator\RegonValidator;
 use GusApi\GusApi;
 use Psr\Log\LoggerInterface;
 use GusApi\SearchReport;
 
-final class NipSearchHandler extends AbstractSearchHandler
+final class RegonSearchHandler extends AbstractSearchHandler
 {
     public function __construct(
         GusApi $gusApi,
         LoggerInterface $logger,
-        private readonly NipValidator $nipValidator
+        private readonly RegonValidator $regonValidator
     ) {
         parent::__construct($gusApi, $logger);
     }
 
     protected function validate(string $identifier): bool
     {
-        return $this->nipValidator->validate($identifier);
+        return $this->regonValidator->validate($identifier);
     }
 
     protected function getIdentifierType(): string
     {
-        return 'NIP';
+        return 'REGON';
     }
 
     /**
@@ -35,11 +35,11 @@ final class NipSearchHandler extends AbstractSearchHandler
      */
     public function __invoke(string $identifier): array
     {
-        return $this->gusApi->getByNip($identifier);
+        return $this->gusApi->getByRegon($identifier);
     }
 
     protected function createValidationException(string $identifier): \Exception
     {
-        return new InvalidNipException("Invalid NIP number: {$identifier}");
+        return new InvalidRegonException("Invalid REGON number: {$identifier}");
     }
 }

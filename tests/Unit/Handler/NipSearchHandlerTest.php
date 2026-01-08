@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace GusBundle\Tests\Unit\Client\SearchHandler;
+namespace GusBundle\Tests\Unit\Handler;
 
-use GusBundle\Client\SearchHandler\NipSearchHandler;
+use GusBundle\Handler\NipSearchHandler;
 use GusBundle\Exception\ApiAuthenticationException;
 use GusBundle\Exception\ApiConnectionException;
 use GusBundle\Exception\CompanyNotFoundException;

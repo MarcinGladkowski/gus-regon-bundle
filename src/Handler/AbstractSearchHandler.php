@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace GusBundle\Client\SearchHandler;
+namespace GusBundle\Handler;
 
 use GusBundle\Exception\ApiAuthenticationException;
 use GusBundle\Exception\ApiConnectionException;

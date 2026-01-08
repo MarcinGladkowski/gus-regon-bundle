@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace GusBundle\Client;
 
-use GusBundle\Client\SearchHandler\KrsSearchHandler;
-use GusBundle\Client\SearchHandler\NipSearchHandler;
-use GusBundle\Client\SearchHandler\RegonSearchHandler;
+use GusBundle\Handler\KrsSearchHandler;
+use GusBundle\Handler\NipSearchHandler;
+use GusBundle\Handler\RegonSearchHandler;
 use GusBundle\Exception\ApiAuthenticationException;
 use GusBundle\Exception\ApiConnectionException;
 use GusBundle\Exception\CompanyNotFoundException;

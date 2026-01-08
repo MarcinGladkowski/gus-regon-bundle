@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace GusBundle\Tests\Unit\Client\SearchHandler;
+namespace GusBundle\Tests\Unit\Handler;
 
-use GusBundle\Client\SearchHandler\KrsSearchHandler;
+use GusBundle\Handler\RegonSearchHandler;
 use GusBundle\Exception\ApiAuthenticationException;
 use GusBundle\Exception\ApiConnectionException;
 use GusBundle\Exception\CompanyNotFoundException;
-use GusBundle\Exception\InvalidKrsException;
+use GusBundle\Exception\InvalidRegonException;
+use GusBundle\Validator\RegonValidator;
 use GusApi\Exception\InvalidUserKeyException;
 use GusApi\Exception\NotFoundException;
 use GusApi\GusApi;
@@ -18,95 +19,114 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-final class KrsSearchHandlerTest extends TestCase
+final class RegonSearchHandlerTest extends TestCase
 {
     private GusApi $gusApi;
     private LoggerInterface $logger;
-    private KrsSearchHandler $handler;
+    private RegonValidator $regonValidator;
+    private RegonSearchHandler $handler;
 
     protected function setUp(): void
     {
         $this->gusApi = $this->createMock(GusApi::class);
         $this->logger = $this->createMock(LoggerInterface::class);
+        $this->regonValidator = new RegonValidator();
 
-        $this->handler = new KrsSearchHandler(
+        $this->handler = new RegonSearchHandler(
             $this->gusApi,
-            $this->logger
+            $this->logger,
+            $this->regonValidator
         );
     }
 
-    public function testSearchSingleWithValidKrsReturnsSearchReport(): void
+    public function testSearchSingleWithValid9DigitRegonReturnsSearchReport(): void
     {
-        $krs = '0000123456';
+        $regon = '123456785';
         $searchReport = new SearchReport(new SearchResponseCompanyData());
 
         $this->gusApi->expects($this->once())
-            ->method('getByKrs')
-            ->with($krs)
+            ->method('getByRegon')
+            ->with($regon)
             ->willReturn([$searchReport]);
 
-        $result = $this->handler->searchSingle($krs);
+        $result = $this->handler->searchSingle($regon);
 
         $this->assertInstanceOf(SearchReport::class, $result);
         $this->assertSame($searchReport, $result);
     }
 
-    public function testSearchSingleWithNonNumericKrsThrowsException(): void
+    public function testSearchSingleWithValid14DigitRegonReturnsSearchReport(): void
     {
-        $invalidKrs = '000012345A';
+        $regon = '12345678512347';
+        $searchReport = new SearchReport(new SearchResponseCompanyData());
 
-        $this->expectException(InvalidKrsException::class);
-        $this->expectExceptionMessage("Invalid KRS number: {$invalidKrs}");
+        $this->gusApi->expects($this->once())
+            ->method('getByRegon')
+            ->with($regon)
+            ->willReturn([$searchReport]);
 
-        $this->handler->searchSingle($invalidKrs);
+        $result = $this->handler->searchSingle($regon);
+
+        $this->assertInstanceOf(SearchReport::class, $result);
+        $this->assertSame($searchReport, $result);
+    }
+
+    public function testSearchSingleWithInvalidRegonChecksumThrowsException(): void
+    {
+        $invalidRegon = '123456786';
+
+        $this->expectException(InvalidRegonException::class);
+        $this->expectExceptionMessage("Invalid REGON number: {$invalidRegon}");
+
+        $this->handler->searchSingle($invalidRegon);
+    }
+
+    public function testSearchSingleWithNonNumericRegonThrowsException(): void
+    {
+        $invalidRegon = '123-456-785';
+
+        $this->expectException(InvalidRegonException::class);
+        $this->expectExceptionMessage("Invalid REGON number: {$invalidRegon}");
+
+        $this->handler->searchSingle($invalidRegon);
     }
 
     public function testSearchSingleWithInvalidLengthThrowsException(): void
     {
-        $invalidKrs = '123456789';
+        $invalidRegon = '12345678';
 
-        $this->expectException(InvalidKrsException::class);
-        $this->expectExceptionMessage("Invalid KRS number: {$invalidKrs}");
+        $this->expectException(InvalidRegonException::class);
+        $this->expectExceptionMessage("Invalid REGON number: {$invalidRegon}");
 
-        $this->handler->searchSingle($invalidKrs);
-    }
-
-    public function testSearchSingleWithTooLongKrsThrowsException(): void
-    {
-        $invalidKrs = '12345678901';
-
-        $this->expectException(InvalidKrsException::class);
-        $this->expectExceptionMessage("Invalid KRS number: {$invalidKrs}");
-
-        $this->handler->searchSingle($invalidKrs);
+        $this->handler->searchSingle($invalidRegon);
     }
 
     public function testSearchSingleWhenNotFoundThrowsCompanyNotFoundException(): void
     {
-        $krs = '0000123456';
+        $regon = '123456785';
 
         $this->gusApi->expects($this->once())
-            ->method('getByKrs')
-            ->with($krs)
+            ->method('getByRegon')
+            ->with($regon)
             ->willThrowException(new NotFoundException('Not found'));
 
         $this->logger->expects($this->once())
             ->method('info')
-            ->with('KRS not found', ['KRS' => $krs]);
+            ->with('REGON not found', ['REGON' => $regon]);
 
         $this->expectException(CompanyNotFoundException::class);
-        $this->expectExceptionMessage("Business with KRS {$krs} not found");
+        $this->expectExceptionMessage("Business with REGON {$regon} not found");
 
-        $this->handler->searchSingle($krs);
+        $this->handler->searchSingle($regon);
     }
 
     public function testSearchSingleWithInvalidApiKeyThrowsApiAuthenticationException(): void
     {
-        $krs = '0000123456';
+        $regon = '123456785';
 
         $this->gusApi->expects($this->once())
-            ->method('getByKrs')
-            ->with($krs)
+            ->method('getByRegon')
+            ->with($regon)
             ->willThrowException(new InvalidUserKeyException('Invalid key'));
 
         $this->logger->expects($this->once())
@@ -116,16 +136,16 @@ final class KrsSearchHandlerTest extends TestCase
         $this->expectException(ApiAuthenticationException::class);
         $this->expectExceptionMessage('Invalid API key');
 
-        $this->handler->searchSingle($krs);
+        $this->handler->searchSingle($regon);
     }
 
     public function testSearchSingleWithSoapFaultThrowsApiConnectionException(): void
     {
-        $krs = '0000123456';
+        $regon = '123456785';
 
         $this->gusApi->expects($this->once())
-            ->method('getByKrs')
-            ->with($krs)
+            ->method('getByRegon')
+            ->with($regon)
             ->willThrowException(new \SoapFault('Server', 'Connection error'));
 
         $this->logger->expects($this->once())
@@ -135,57 +155,57 @@ final class KrsSearchHandlerTest extends TestCase
         $this->expectException(ApiConnectionException::class);
         $this->expectExceptionMessage('Failed to connect to GUS API');
 
-        $this->handler->searchSingle($krs);
+        $this->handler->searchSingle($regon);
     }
 
     public function testSearchSingleWithMultipleResultsThrowsException(): void
     {
-        $krs = '0000123456';
+        $regon = '123456785';
         $searchReport1 = new SearchReport(new SearchResponseCompanyData());
         $searchReport2 = new SearchReport(new SearchResponseCompanyData());
 
         $this->gusApi->expects($this->once())
-            ->method('getByKrs')
-            ->with($krs)
+            ->method('getByRegon')
+            ->with($regon)
             ->willReturn([$searchReport1, $searchReport2]);
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage("Unexpected error: Multiple results found when single expected");
+        $this->expectExceptionMessage('Multiple results found when single expected');
 
-        $this->handler->searchSingle($krs);
+        $this->handler->searchSingle($regon);
     }
 
     public function testSearchSingleWithEmptyResultReturnsEmptySearchReport(): void
     {
-        $krs = '0000123456';
+        $regon = '123456785';
 
         $this->gusApi->expects($this->once())
-            ->method('getByKrs')
-            ->with($krs)
+            ->method('getByRegon')
+            ->with($regon)
             ->willReturn([]);
 
-        $result = $this->handler->searchSingle($krs);
+        $result = $this->handler->searchSingle($regon);
 
         $this->assertInstanceOf(SearchReport::class, $result);
     }
 
     public function testSearchSingleWithUnexpectedExceptionThrowsApiConnectionException(): void
     {
-        $krs = '0000123456';
+        $regon = '123456785';
         $unexpectedException = new \RuntimeException('Unexpected error');
 
         $this->gusApi->expects($this->once())
-            ->method('getByKrs')
-            ->with($krs)
+            ->method('getByRegon')
+            ->with($regon)
             ->willThrowException($unexpectedException);
 
         $this->logger->expects($this->once())
             ->method('error')
-            ->with('Unexpected error during KRS lookup', $this->anything());
+            ->with('Unexpected error during REGON lookup', $this->anything());
 
         $this->expectException(ApiConnectionException::class);
         $this->expectExceptionMessage('Unexpected error: Unexpected error');
 
-        $this->handler->searchSingle($krs);
+        $this->handler->searchSingle($regon);
     }
 }

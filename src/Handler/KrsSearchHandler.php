@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace GusBundle\Client\SearchHandler;
+namespace GusBundle\Handler;
 
 use GusBundle\Exception\InvalidKrsException;
-use GusApi\GusApi;
-use Psr\Log\LoggerInterface;
 use GusApi\SearchReport;
 
 final class KrsSearchHandler extends AbstractSearchHandler
@@ -25,7 +23,7 @@ final class KrsSearchHandler extends AbstractSearchHandler
      * @return SearchReport[]
      */
     public function __invoke(string $identifier): array
-    {
+    {   
         return $this->gusApi->getByKrs($identifier);
     }
 
