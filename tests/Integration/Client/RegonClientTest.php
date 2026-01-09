@@ -70,4 +70,20 @@ final class RegonClientTest extends TestCase
         // In Sandbox "12..." usually returns something or valid structure.
         $this->assertNotNull($report);
     }
+
+    public function testGetFullReportWithValidRegon(): void
+    {
+        // 000331501 - GUS
+        $regon = '000331501';
+        // BIR11OsPrawna is standard, but the underlying library validation expects BIR12OsPrawna
+        // as per the exception message seen in test failures.
+        $reportName = 'BIR12OsPrawna';
+
+        $searchReport = $this->client->getByRegon($regon);
+
+        $fullReport = $this->client->getFullReport($searchReport, $reportName);
+
+        $this->assertIsArray($fullReport);
+        $this->assertNotEmpty($fullReport);
+    }
 }

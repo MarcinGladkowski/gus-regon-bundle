@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GusBundle\Client;
 
+use GusBundle\Handler\FullReportHandler;
 use GusBundle\Handler\KrsSearchHandler;
 use GusBundle\Handler\NipSearchHandler;
 use GusBundle\Handler\RegonSearchHandler;
@@ -78,6 +79,16 @@ final class RegonClient implements RegonClientInterface
         $this->session->ensureLoggedIn();
 
         return (new KrsSearchHandler($this->gusApi, $this->logger))->searchSingle($krs);
+    }
+
+    /**
+     * @return array<int, array<string, string>>
+     */
+    public function getFullReport(SearchReport $searchReport, string $reportName): array
+    {
+        $this->session->ensureLoggedIn();
+
+        return (new FullReportHandler($this->gusApi, $this->logger))($searchReport, $reportName);
     }
 
     public function login(): void
