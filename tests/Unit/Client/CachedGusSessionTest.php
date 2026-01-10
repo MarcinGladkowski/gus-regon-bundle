@@ -74,7 +74,7 @@ class CachedGusSessionTest extends TestCase
             ->willReturn($cacheItem);
 
         $this->innerSessionMock->expects($this->once())->method('login');
-        
+
         $this->gusApiMock->expects($this->once())
             ->method('getSessionId')
             ->willReturn($sessionId);
