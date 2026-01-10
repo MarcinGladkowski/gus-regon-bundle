@@ -4,24 +4,22 @@ declare(strict_types=1);
 
 namespace GusBundle\Client;
 
-use GusBundle\Exception\ApiAuthenticationException;
-use GusBundle\Exception\ApiConnectionException;
-use GusApi\Exception\InvalidUserKeyException;
 use GusApi\GusApi;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 
-final class GusSession
+final class CachedGusSession implements GusSessionInterface
 {
     private const SESSION_TTL = 3300; // 55 minutes (GUS session lasts 60m)
 
     private bool $isLoggedIn = false;
 
     public function __construct(
-        private readonly GusApi $gusApi,
-        private readonly LoggerInterface $logger,
-        private readonly ?CacheItemPoolInterface $cache = null,
-        private readonly ?string $cacheKey = null
+        private readonly GusSessionInterface $innerSession,
+        private readonly GusApi $gusApi, // Needed to set/get session ID directly
+        private readonly CacheItemPoolInterface $cache,
+        private readonly string $cacheKey,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -35,38 +33,24 @@ final class GusSession
             return;
         }
 
-        try {
-            $this->gusApi->login();
-            $this->isLoggedIn = true;
-            $this->logger->info('Successfully logged in to GUS API');
+        $this->innerSession->login();
+        $this->isLoggedIn = true;
 
-            $this->saveSessionToCache();
-        } catch (InvalidUserKeyException $e) {
-            $this->logger->error('Failed to login - invalid API key', ['exception' => $e]);
-            throw new ApiAuthenticationException('Invalid API key', '', 0, $e);
-        } catch (\SoapFault $e) {
-            $this->logger->error('Failed to login - SOAP error', ['exception' => $e]);
-            throw new ApiConnectionException('Failed to connect to GUS API', '', 0, $e);
-        }
+        $this->saveSessionToCache();
     }
 
     public function logout(): void
     {
-        if (!$this->isLoggedIn) {
-            return;
-        }
-
+        // First remove from cache to ensure no one picks up a dead session
         try {
-            $this->gusApi->logout();
-            $this->isLoggedIn = false;
-            $this->logger->info('Successfully logged out from GUS API');
-
-            if ($this->cache && $this->cacheKey) {
-                $this->cache->deleteItem($this->cacheKey);
-            }
+            $this->cache->deleteItem($this->cacheKey);
         } catch (\Exception $e) {
-            $this->logger->warning('Failed to logout gracefully', ['exception' => $e]);
+            $this->logger->warning('Failed to remove session from cache', ['exception' => $e]);
         }
+
+        // Then perform actual logout
+        $this->innerSession->logout();
+        $this->isLoggedIn = false;
     }
 
     public function ensureLoggedIn(): void
@@ -83,10 +67,6 @@ final class GusSession
 
     private function restoreSessionFromCache(): bool
     {
-        if (null === $this->cache || null === $this->cacheKey) {
-            return false;
-        }
-
         try {
             $item = $this->cache->getItem($this->cacheKey);
             if ($item->isHit()) {
@@ -108,10 +88,6 @@ final class GusSession
 
     private function saveSessionToCache(): void
     {
-        if (null === $this->cache || null === $this->cacheKey) {
-            return;
-        }
-
         try {
             $sessionId = $this->gusApi->getSessionId();
             $item = $this->cache->getItem($this->cacheKey);

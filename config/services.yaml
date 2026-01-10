@@ -16,6 +16,7 @@ services:
         arguments:
             $apiKey: '%env(GUS_REGON_API_KEY)%'
             $environment: '%env(default:GUS_ENVIRONMENT:GUS_ENVIRONMENT)%'
+            $cache: '@?cache.app'
 
     # Cache Configuration
     GusBundle\Cache\GusCacheStrategy:

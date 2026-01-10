@@ -18,6 +18,7 @@ use GusBundle\Validator\NipValidator;
 use GusBundle\Validator\RegonValidator;
 use GusApi\GusApi;
 use GusApi\SearchReport;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -27,15 +28,29 @@ final class RegonClient implements RegonClientInterface
     private const ENVIRONMENT_PROD = 'production';
 
     private GusApi $gusApi;
-    private GusSession $session;
+    private GusSessionInterface $session;
 
     public function __construct(
         private readonly string $apiKey,
         private readonly string $environment,
-        private readonly LoggerInterface $logger = new NullLogger()
+        private readonly LoggerInterface $logger = new NullLogger(),
+        private readonly ?CacheItemPoolInterface $cache = null
     ) {
         $this->initializeGusApi();
-        $this->session = new GusSession($this->gusApi, $this->logger);
+
+        $session = new RuntimeGusSession($this->gusApi, $this->logger);
+
+        if ($this->cache) {
+            $session = new CachedGusSession(
+                $session,
+                $this->gusApi,
+                $this->cache,
+                'gus_session_' . md5($this->apiKey),
+                $this->logger
+            );
+        }
+
+        $this->session = $session;
     }
 
     /**
