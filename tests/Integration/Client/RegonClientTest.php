@@ -7,6 +7,7 @@ namespace GusBundle\Tests\Integration\Client;
 use GusBundle\Client\RegonClient;
 use GusBundle\Exception\ApiAuthenticationException;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 final class RegonClientTest extends TestCase
 {
@@ -17,7 +18,7 @@ final class RegonClientTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         try {
-            $client = new RegonClient(self::TEST_API_KEY, 'test');
+            $client = new RegonClient(self::TEST_API_KEY, 'test', new ArrayAdapter());
             $client->login();
         } catch (ApiAuthenticationException $e) {
             self::markTestSkipped('GUS API Authentication failed. Check your API key or GUS service availability.');
@@ -30,12 +31,12 @@ final class RegonClientTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->client = new RegonClient(self::TEST_API_KEY, 'test');
+        $this->client = new RegonClient(self::TEST_API_KEY, 'test', new ArrayAdapter());
     }
 
     public function testLoginFailureWithInvalidKey(): void
     {
-        $client = new RegonClient('invalid-key', 'test');
+        $client = new RegonClient('invalid-key', 'test', new ArrayAdapter());
 
         $this->expectException(ApiAuthenticationException::class);
         $client->login();

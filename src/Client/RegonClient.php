@@ -33,24 +33,18 @@ final class RegonClient implements RegonClientInterface
     public function __construct(
         private readonly string $apiKey,
         private readonly string $environment,
-        private readonly LoggerInterface $logger = new NullLogger(),
-        private readonly ?CacheItemPoolInterface $cache = null
+        private readonly CacheItemPoolInterface $cache,
+        private readonly LoggerInterface $logger = new NullLogger()
     ) {
         $this->initializeGusApi();
 
-        $session = new RuntimeGusSession($this->gusApi, $this->logger);
-
-        if ($this->cache) {
-            $session = new CachedGusSession(
-                $session,
-                $this->gusApi,
-                $this->cache,
-                'gus_session_' . md5($this->apiKey),
-                $this->logger
-            );
-        }
-
-        $this->session = $session;
+        $this->session = new CachedGusSession(
+            new RuntimeGusSession($this->gusApi, $this->logger),
+            $this->gusApi,
+            $this->cache,
+            'gus_session_' . md5($this->apiKey),
+            $this->logger
+        );
     }
 
     /**
