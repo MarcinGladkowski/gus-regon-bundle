@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace GusBundle\Client;
 
+use GusBundle\Collection\SearchReportCollection;
 use GusApi\SearchReport;
 
 interface RegonClientInterface
 {
-    public function getByRegon(string $regon): SearchReport;
+    public function getByRegon(string $regon): SearchReportCollection;
 
-    public function getByNip(string $nip): SearchReport;
+    public function getByNip(string $nip): SearchReportCollection;
 
-    public function getByKrs(string $krs): SearchReport;
+    public function getByKrs(string $krs): SearchReportCollection;
 
     /**
      * @return array<int, array<string, string>>

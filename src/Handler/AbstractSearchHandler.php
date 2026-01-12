@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GusBundle\Handler;
 
+use GusBundle\Collection\SearchReportCollection;
 use GusBundle\Exception\ApiAuthenticationException;
 use GusBundle\Exception\ApiConnectionException;
 use GusBundle\Exception\CompanyNotFoundException;
@@ -30,7 +31,7 @@ abstract class AbstractSearchHandler
 
     abstract protected function createValidationException(string $identifier): \Exception;
 
-    public function searchSingle(string $identifier): SearchReport
+    public function search(string $identifier): SearchReportCollection
     {
         if (!$this->validate($identifier)) {
             throw $this->createValidationException($identifier);
@@ -39,15 +40,7 @@ abstract class AbstractSearchHandler
         try {
             $result = $this($identifier);
 
-            if (!empty($result) && count($result) === 1) {
-                return $result[0];
-            }
-
-            if (count($result) > 1) {
-                throw new RuntimeException('Multiple results found when single expected');
-            }
-
-            return new SearchReport(new SearchResponseCompanyData());
+            return new SearchReportCollection($result);
 
         } catch (NotFoundException $e) {
             $this->logger->info("{$this->getIdentifierType()} not found", [$this->getIdentifierType() => $identifier]);

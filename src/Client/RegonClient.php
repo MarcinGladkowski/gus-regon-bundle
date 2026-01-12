@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GusBundle\Client;
 
+use GusBundle\Collection\SearchReportCollection;
 use GusBundle\Handler\FullReportHandler;
 use GusBundle\Handler\KrsSearchHandler;
 use GusBundle\Handler\NipSearchHandler;
@@ -53,12 +54,12 @@ final class RegonClient implements RegonClientInterface
      * @throws InvalidRegonException
      * @throws ApiAuthenticationException
      * @throws ApiConnectionException
-     * @return SearchReport
+     * @return SearchReportCollection
      */
-    public function getByRegon(string $regon): SearchReport
+    public function getByRegon(string $regon): SearchReportCollection
     {
         $this->session->ensureLoggedIn();
-        return (new RegonSearchHandler($this->gusApi, $this->logger, new RegonValidator()))->searchSingle($regon);
+        return (new RegonSearchHandler($this->gusApi, $this->logger, new RegonValidator()))->search($regon);
     }
 
     /**
@@ -67,12 +68,12 @@ final class RegonClient implements RegonClientInterface
      * @throws CompanyNotFoundException
      * @throws ApiAuthenticationException
      * @throws ApiConnectionException
-     * @return SearchReport
+     * @return SearchReportCollection
      */
-    public function getByNip(string $nip): SearchReport
+    public function getByNip(string $nip): SearchReportCollection
     {
         $this->session->ensureLoggedIn();
-        return (new NipSearchHandler($this->gusApi, $this->logger, new NipValidator()))->searchSingle($nip);
+        return (new NipSearchHandler($this->gusApi, $this->logger, new NipValidator()))->search($nip);
     }
 
     /**
@@ -81,13 +82,13 @@ final class RegonClient implements RegonClientInterface
      * @throws CompanyNotFoundException
      * @throws ApiAuthenticationException
      * @throws ApiConnectionException
-     * @return SearchReport
+     * @return SearchReportCollection
      */
-    public function getByKrs(string $krs): SearchReport
+    public function getByKrs(string $krs): SearchReportCollection
     {
         $this->session->ensureLoggedIn();
 
-        return (new KrsSearchHandler($this->gusApi, $this->logger))->searchSingle($krs);
+        return (new KrsSearchHandler($this->gusApi, $this->logger))->search($krs);
     }
 
     /**

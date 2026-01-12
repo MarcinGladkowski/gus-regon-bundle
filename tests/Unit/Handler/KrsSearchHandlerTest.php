@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GusBundle\Tests\Unit\Handler;
 
+use GusBundle\Collection\SearchReportCollection;
 use GusBundle\Handler\KrsSearchHandler;
 use GusBundle\Exception\ApiAuthenticationException;
 use GusBundle\Exception\ApiConnectionException;
@@ -45,10 +46,11 @@ final class KrsSearchHandlerTest extends TestCase
             ->with($krs)
             ->willReturn([$searchReport]);
 
-        $result = $this->handler->searchSingle($krs);
+        $result = $this->handler->search($krs);
 
-        $this->assertInstanceOf(SearchReport::class, $result);
-        $this->assertSame($searchReport, $result);
+        $this->assertInstanceOf(SearchReportCollection::class, $result);
+        $this->assertCount(1, $result);
+        $this->assertSame($searchReport, $result->first());
     }
 
     public function testSearchSingleWithNonNumericKrsThrowsException(): void
@@ -58,7 +60,7 @@ final class KrsSearchHandlerTest extends TestCase
         $this->expectException(InvalidKrsException::class);
         $this->expectExceptionMessage("Invalid KRS number: {$invalidKrs}");
 
-        $this->handler->searchSingle($invalidKrs);
+        $this->handler->search($invalidKrs);
     }
 
     public function testSearchSingleWithInvalidLengthThrowsException(): void
@@ -68,7 +70,7 @@ final class KrsSearchHandlerTest extends TestCase
         $this->expectException(InvalidKrsException::class);
         $this->expectExceptionMessage("Invalid KRS number: {$invalidKrs}");
 
-        $this->handler->searchSingle($invalidKrs);
+        $this->handler->search($invalidKrs);
     }
 
     public function testSearchSingleWithTooLongKrsThrowsException(): void
@@ -78,7 +80,7 @@ final class KrsSearchHandlerTest extends TestCase
         $this->expectException(InvalidKrsException::class);
         $this->expectExceptionMessage("Invalid KRS number: {$invalidKrs}");
 
-        $this->handler->searchSingle($invalidKrs);
+        $this->handler->search($invalidKrs);
     }
 
     public function testSearchSingleWhenNotFoundThrowsCompanyNotFoundException(): void
@@ -97,7 +99,7 @@ final class KrsSearchHandlerTest extends TestCase
         $this->expectException(CompanyNotFoundException::class);
         $this->expectExceptionMessage("Business with KRS {$krs} not found");
 
-        $this->handler->searchSingle($krs);
+        $this->handler->search($krs);
     }
 
     public function testSearchSingleWithInvalidApiKeyThrowsApiAuthenticationException(): void
@@ -116,7 +118,7 @@ final class KrsSearchHandlerTest extends TestCase
         $this->expectException(ApiAuthenticationException::class);
         $this->expectExceptionMessage('Invalid API key');
 
-        $this->handler->searchSingle($krs);
+        $this->handler->search($krs);
     }
 
     public function testSearchSingleWithSoapFaultThrowsApiConnectionException(): void
@@ -135,10 +137,10 @@ final class KrsSearchHandlerTest extends TestCase
         $this->expectException(ApiConnectionException::class);
         $this->expectExceptionMessage('Failed to connect to GUS API');
 
-        $this->handler->searchSingle($krs);
+        $this->handler->search($krs);
     }
 
-    public function testSearchSingleWithMultipleResultsThrowsException(): void
+    public function testSearchSingleWithMultipleResultsReturnsCollection(): void
     {
         $krs = '0000123456';
         $searchReport1 = new SearchReport(new SearchResponseCompanyData());
@@ -149,10 +151,10 @@ final class KrsSearchHandlerTest extends TestCase
             ->with($krs)
             ->willReturn([$searchReport1, $searchReport2]);
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage("Unexpected error: Multiple results found when single expected");
+        $result = $this->handler->search($krs);
 
-        $this->handler->searchSingle($krs);
+        $this->assertInstanceOf(SearchReportCollection::class, $result);
+        $this->assertCount(2, $result);
     }
 
     public function testSearchSingleWithEmptyResultReturnsEmptySearchReport(): void
@@ -164,9 +166,10 @@ final class KrsSearchHandlerTest extends TestCase
             ->with($krs)
             ->willReturn([]);
 
-        $result = $this->handler->searchSingle($krs);
+        $result = $this->handler->search($krs);
 
-        $this->assertInstanceOf(SearchReport::class, $result);
+        $this->assertInstanceOf(SearchReportCollection::class, $result);
+        $this->assertCount(0, $result);
     }
 
     public function testSearchSingleWithUnexpectedExceptionThrowsApiConnectionException(): void
@@ -186,6 +189,6 @@ final class KrsSearchHandlerTest extends TestCase
         $this->expectException(ApiConnectionException::class);
         $this->expectExceptionMessage('Unexpected error: Unexpected error');
 
-        $this->handler->searchSingle($krs);
+        $this->handler->search($krs);
     }
 }

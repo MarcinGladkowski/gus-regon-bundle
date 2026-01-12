@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GusBundle\Tests\Unit\Handler;
 
+use GusBundle\Collection\SearchReportCollection;
 use GusBundle\Handler\RegonSearchHandler;
 use GusBundle\Exception\ApiAuthenticationException;
 use GusBundle\Exception\ApiConnectionException;
@@ -49,10 +50,11 @@ final class RegonSearchHandlerTest extends TestCase
             ->with($regon)
             ->willReturn([$searchReport]);
 
-        $result = $this->handler->searchSingle($regon);
+        $result = $this->handler->search($regon);
 
-        $this->assertInstanceOf(SearchReport::class, $result);
-        $this->assertSame($searchReport, $result);
+        $this->assertInstanceOf(SearchReportCollection::class, $result);
+        $this->assertCount(1, $result);
+        $this->assertSame($searchReport, $result->first());
     }
 
     public function testSearchSingleWithValid14DigitRegonReturnsSearchReport(): void
@@ -65,10 +67,11 @@ final class RegonSearchHandlerTest extends TestCase
             ->with($regon)
             ->willReturn([$searchReport]);
 
-        $result = $this->handler->searchSingle($regon);
+        $result = $this->handler->search($regon);
 
-        $this->assertInstanceOf(SearchReport::class, $result);
-        $this->assertSame($searchReport, $result);
+        $this->assertInstanceOf(SearchReportCollection::class, $result);
+        $this->assertCount(1, $result);
+        $this->assertSame($searchReport, $result->first());
     }
 
     public function testSearchSingleWithInvalidRegonChecksumThrowsException(): void
@@ -78,7 +81,7 @@ final class RegonSearchHandlerTest extends TestCase
         $this->expectException(InvalidRegonException::class);
         $this->expectExceptionMessage("Invalid REGON number: {$invalidRegon}");
 
-        $this->handler->searchSingle($invalidRegon);
+        $this->handler->search($invalidRegon);
     }
 
     public function testSearchSingleWithNonNumericRegonThrowsException(): void
@@ -88,7 +91,7 @@ final class RegonSearchHandlerTest extends TestCase
         $this->expectException(InvalidRegonException::class);
         $this->expectExceptionMessage("Invalid REGON number: {$invalidRegon}");
 
-        $this->handler->searchSingle($invalidRegon);
+        $this->handler->search($invalidRegon);
     }
 
     public function testSearchSingleWithInvalidLengthThrowsException(): void
@@ -98,7 +101,7 @@ final class RegonSearchHandlerTest extends TestCase
         $this->expectException(InvalidRegonException::class);
         $this->expectExceptionMessage("Invalid REGON number: {$invalidRegon}");
 
-        $this->handler->searchSingle($invalidRegon);
+        $this->handler->search($invalidRegon);
     }
 
     public function testSearchSingleWhenNotFoundThrowsCompanyNotFoundException(): void
@@ -117,7 +120,7 @@ final class RegonSearchHandlerTest extends TestCase
         $this->expectException(CompanyNotFoundException::class);
         $this->expectExceptionMessage("Business with REGON {$regon} not found");
 
-        $this->handler->searchSingle($regon);
+        $this->handler->search($regon);
     }
 
     public function testSearchSingleWithInvalidApiKeyThrowsApiAuthenticationException(): void
@@ -136,7 +139,7 @@ final class RegonSearchHandlerTest extends TestCase
         $this->expectException(ApiAuthenticationException::class);
         $this->expectExceptionMessage('Invalid API key');
 
-        $this->handler->searchSingle($regon);
+        $this->handler->search($regon);
     }
 
     public function testSearchSingleWithSoapFaultThrowsApiConnectionException(): void
@@ -155,10 +158,10 @@ final class RegonSearchHandlerTest extends TestCase
         $this->expectException(ApiConnectionException::class);
         $this->expectExceptionMessage('Failed to connect to GUS API');
 
-        $this->handler->searchSingle($regon);
+        $this->handler->search($regon);
     }
 
-    public function testSearchSingleWithMultipleResultsThrowsException(): void
+    public function testSearchSingleWithMultipleResultsReturnsCollection(): void
     {
         $regon = '123456785';
         $searchReport1 = new SearchReport(new SearchResponseCompanyData());
@@ -169,10 +172,10 @@ final class RegonSearchHandlerTest extends TestCase
             ->with($regon)
             ->willReturn([$searchReport1, $searchReport2]);
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Multiple results found when single expected');
+        $result = $this->handler->search($regon);
 
-        $this->handler->searchSingle($regon);
+        $this->assertInstanceOf(SearchReportCollection::class, $result);
+        $this->assertCount(2, $result);
     }
 
     public function testSearchSingleWithEmptyResultReturnsEmptySearchReport(): void
@@ -184,9 +187,10 @@ final class RegonSearchHandlerTest extends TestCase
             ->with($regon)
             ->willReturn([]);
 
-        $result = $this->handler->searchSingle($regon);
+        $result = $this->handler->search($regon);
 
-        $this->assertInstanceOf(SearchReport::class, $result);
+        $this->assertInstanceOf(SearchReportCollection::class, $result);
+        $this->assertCount(0, $result);
     }
 
     public function testSearchSingleWithUnexpectedExceptionThrowsApiConnectionException(): void
@@ -206,6 +210,6 @@ final class RegonSearchHandlerTest extends TestCase
         $this->expectException(ApiConnectionException::class);
         $this->expectExceptionMessage('Unexpected error: Unexpected error');
 
-        $this->handler->searchSingle($regon);
+        $this->handler->search($regon);
     }
 }

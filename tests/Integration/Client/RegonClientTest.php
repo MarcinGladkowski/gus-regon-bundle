@@ -49,7 +49,7 @@ final class RegonClientTest extends TestCase
         $regon = '000331501';
 
         $report = $this->client->getByRegon($regon);
-        $this->assertNotEmpty($report->getName());
+        $this->assertNotEmpty($report->first()->getName());
     }
 
     public function testGetByNipWithValidNip(): void
@@ -58,7 +58,7 @@ final class RegonClientTest extends TestCase
         $nip = '5261040828';
 
         $report = $this->client->getByNip($nip);
-        $this->assertNotEmpty($report->getName());
+        $this->assertNotEmpty($report->first()->getName());
     }
 
     public function testGetByKrsWithValidKrs(): void
@@ -70,6 +70,7 @@ final class RegonClientTest extends TestCase
         // SearchReport might be empty if not found, but we expect it to be return valid object.
         // In Sandbox "12..." usually returns something or valid structure.
         $this->assertNotNull($report);
+        $this->assertFalse($report->isEmpty());
     }
 
     public function testGetFullReportWithValidRegon(): void
@@ -80,9 +81,9 @@ final class RegonClientTest extends TestCase
         // as per the exception message seen in test failures.
         $reportName = 'BIR12OsPrawna';
 
-        $searchReport = $this->client->getByRegon($regon);
+        $searchReportCollection = $this->client->getByRegon($regon);
 
-        $fullReport = $this->client->getFullReport($searchReport, $reportName);
+        $fullReport = $this->client->getFullReport($searchReportCollection->first(), $reportName);
 
         $this->assertIsArray($fullReport);
         $this->assertNotEmpty($fullReport);

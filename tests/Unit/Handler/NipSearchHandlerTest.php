@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GusBundle\Tests\Unit\Handler;
 
+use GusBundle\Collection\SearchReportCollection;
 use GusBundle\Handler\NipSearchHandler;
 use GusBundle\Exception\ApiAuthenticationException;
 use GusBundle\Exception\ApiConnectionException;
@@ -49,10 +50,11 @@ final class NipSearchHandlerTest extends TestCase
             ->with($nip)
             ->willReturn([$searchReport]);
 
-        $result = $this->handler->searchSingle($nip);
+        $result = $this->handler->search($nip);
 
-        $this->assertInstanceOf(SearchReport::class, $result);
-        $this->assertSame($searchReport, $result);
+        $this->assertInstanceOf(SearchReportCollection::class, $result);
+        $this->assertCount(1, $result);
+        $this->assertSame($searchReport, $result->first());
     }
 
     public function testSearchSingleWithInvalidNipThrowsException(): void
@@ -62,7 +64,7 @@ final class NipSearchHandlerTest extends TestCase
         $this->expectException(InvalidNipException::class);
         $this->expectExceptionMessage("Invalid NIP number: {$invalidNip}");
 
-        $this->handler->searchSingle($invalidNip);
+        $this->handler->search($invalidNip);
     }
 
     public function testSearchSingleWithNonNumericNipThrowsException(): void
@@ -72,7 +74,7 @@ final class NipSearchHandlerTest extends TestCase
         $this->expectException(InvalidNipException::class);
         $this->expectExceptionMessage("Invalid NIP number: {$invalidNip}");
 
-        $this->handler->searchSingle($invalidNip);
+        $this->handler->search($invalidNip);
     }
 
     public function testSearchSingleWithInvalidLengthThrowsException(): void
@@ -82,7 +84,7 @@ final class NipSearchHandlerTest extends TestCase
         $this->expectException(InvalidNipException::class);
         $this->expectExceptionMessage("Invalid NIP number: {$invalidNip}");
 
-        $this->handler->searchSingle($invalidNip);
+        $this->handler->search($invalidNip);
     }
 
     public function testSearchSingleWhenNotFoundThrowsCompanyNotFoundException(): void
@@ -101,7 +103,7 @@ final class NipSearchHandlerTest extends TestCase
         $this->expectException(CompanyNotFoundException::class);
         $this->expectExceptionMessage("Business with NIP {$nip} not found");
 
-        $this->handler->searchSingle($nip);
+        $this->handler->search($nip);
     }
 
     public function testSearchSingleWithInvalidApiKeyThrowsApiAuthenticationException(): void
@@ -120,7 +122,7 @@ final class NipSearchHandlerTest extends TestCase
         $this->expectException(ApiAuthenticationException::class);
         $this->expectExceptionMessage('Invalid API key');
 
-        $this->handler->searchSingle($nip);
+        $this->handler->search($nip);
     }
 
     public function testSearchSingleWithSoapFaultThrowsApiConnectionException(): void
@@ -139,24 +141,7 @@ final class NipSearchHandlerTest extends TestCase
         $this->expectException(ApiConnectionException::class);
         $this->expectExceptionMessage('Failed to connect to GUS API');
 
-        $this->handler->searchSingle($nip);
-    }
-
-    public function testSearchSingleWithMultipleResultsThrowsException(): void
-    {
-        $nip = '5260250274';
-        $searchReport1 = new SearchReport(new SearchResponseCompanyData());
-        $searchReport2 = new SearchReport(new SearchResponseCompanyData());
-
-        $this->gusApi->expects($this->once())
-            ->method('getByNip')
-            ->with($nip)
-            ->willReturn([$searchReport1, $searchReport2]);
-
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Multiple results found when single expected');
-
-        $this->handler->searchSingle($nip);
+        $this->handler->search($nip);
     }
 
     public function testSearchSingleWithEmptyResultReturnsEmptySearchReport(): void
@@ -168,9 +153,9 @@ final class NipSearchHandlerTest extends TestCase
             ->with($nip)
             ->willReturn([]);
 
-        $result = $this->handler->searchSingle($nip);
+        $result = $this->handler->search($nip);
 
-        $this->assertInstanceOf(SearchReport::class, $result);
+        $this->assertInstanceOf(SearchReportCollection::class, $result);
     }
 
     public function testSearchSingleWithUnexpectedExceptionThrowsApiConnectionException(): void
@@ -190,6 +175,6 @@ final class NipSearchHandlerTest extends TestCase
         $this->expectException(ApiConnectionException::class);
         $this->expectExceptionMessage('Unexpected error: Unexpected error');
 
-        $this->handler->searchSingle($nip);
+        $this->handler->search($nip);
     }
 }
