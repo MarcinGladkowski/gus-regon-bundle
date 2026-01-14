@@ -56,23 +56,23 @@ GUS_API_KEY=your_gus_api_key_here
 ### Basic Company Lookup
 
 ```php
-use GusBundle\Service\GusApiClient;
+use GusBundle\Client\RegonClientInterface;
+use GusApi\SearchReport;
 
 class YourController
 {
     public function __construct(
-        private GusApiClient $gusClient
+        private RegonClientInterface $gusClient
     ) {}
 
     public function lookup(string $nip): Response
     {
-        $businessData = $this->gusClient->searchByNip($nip);
+        $reports = $this->gusClient->getByNip($nip);
         
-        if ($businessData) {
-            // Access company data
-            $name = $businessData->getName();
-            $regon = $businessData->getRegon();
-            $address = $businessData->getAddress();
+        foreach ($reports as $report) {
+            /** @var SearchReport $report */
+            $name = $report->getName();
+            $regon = $report->getRegon();
             
             // ...
         }
