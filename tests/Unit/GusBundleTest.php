@@ -40,7 +40,7 @@ class GusBundleTest extends TestCase
         // Check defaults
         $this->assertSame('%env(GUS_REGON_API_KEY)%', $definition->getArgument('$apiKey'));
         $this->assertSame('%env(default:GUS_ENVIRONMENT:GUS_ENVIRONMENT)%', $definition->getArgument('$environment'));
-        
+
         // Cache should be @cache.app by default (from services.yaml)
         $this->assertSame('cache.app', (string) $definition->getArgument('$cache'));
     }
