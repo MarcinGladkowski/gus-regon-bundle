@@ -23,7 +23,3 @@ services:
         arguments:
             $cache: '@cache.app'
             $ttl: '%env(default:gus_cache_ttl:int:GUS_CACHE_TTL)%'
-
-parameters:
-    gus_cache_ttl: 86400  # 24 hours default
-    GUS_ENVIRONMENT: 'test'
