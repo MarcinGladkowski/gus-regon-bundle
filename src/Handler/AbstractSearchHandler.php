@@ -12,10 +12,7 @@ use GusBundle\Exception\GusApiException;
 use GusApi\Exception\InvalidUserKeyException;
 use GusApi\Exception\NotFoundException;
 use GusApi\GusApi;
-use GusApi\SearchReport;
-use GusApi\Type\Response\SearchResponseCompanyData;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 
 abstract class AbstractSearchHandler
 {
@@ -38,9 +35,7 @@ abstract class AbstractSearchHandler
         }
 
         try {
-            $result = $this($identifier);
-
-            return new SearchReportCollection($result);
+            return new SearchReportCollection($this($identifier));
 
         } catch (NotFoundException $e) {
             $this->logger->info("{$this->getIdentifierType()} not found", [$this->getIdentifierType() => $identifier]);
